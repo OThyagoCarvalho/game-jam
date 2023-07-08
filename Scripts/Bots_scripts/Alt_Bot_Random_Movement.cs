@@ -11,9 +11,9 @@ NavMeshAgent agent;
 [SerializeField] LayerMask whatIsGround, whatIsPlayer;
 
 //run away from player
-int multiplier = 1;
+[SerializeField]int multiplier = 1;
 [SerializeField]Transform Player;
-float range = 30;
+[SerializeField]float range = 30;
 
 //patroling
 Vector3 destinationPoint;
