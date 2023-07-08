@@ -9,6 +9,7 @@ public class Alt_Bot_Movement : MonoBehaviour {
 GameObject player;
 NavMeshAgent agent;
 [SerializeField] LayerMask whatIsGround, whatIsPlayer;
+[SerializeField] float patrolingSpeed;
 
 //run away from player
 [SerializeField]int multiplier = 1;
@@ -38,11 +39,15 @@ void Patrol(){
     float distance = Vector3.Distance(transform.position, Player.position);
     if (distance < range) {
      agent.SetDestination(runTo);
+     agent.speed = patrolingSpeed;
     }
     //else patrol randomly
     else {
         if (!hasDestination) GetDestinationPoint();
-        if (hasDestination) agent.SetDestination(destinationPoint);
+        if (hasDestination) {
+            agent.SetDestination(destinationPoint);
+            agent.speed = patrolingSpeed;
+        }
         if (Vector3.Distance(transform.position, destinationPoint) < 10) hasDestination = false;}
 }
 
