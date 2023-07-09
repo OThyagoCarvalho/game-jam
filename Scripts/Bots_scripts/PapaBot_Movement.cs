@@ -4,17 +4,18 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class Alt_Bot_Movement : MonoBehaviour {
-
+public class PapaBot_Movement : MonoBehaviour {
+   
 GameObject player;
+GameObject pinto;
 NavMeshAgent agent;
-[SerializeField] LayerMask whatIsGround, whatIsPlayer;
-[SerializeField] float patrolingSpeed = 5;
-[SerializeField] float fleeingSpeedMultiplier = 2;
+[SerializeField] LayerMask whatIsGround, whatIsPlayer, whatIsPinto;
+[SerializeField] float patrolingSpeed;
 
 //run away from player
 [SerializeField]int multiplier = 1;
 [SerializeField]Transform Player;
+[SerializeField]Transform Pinto;
 [SerializeField]float range = 30;
 
 //patroling
@@ -26,39 +27,29 @@ bool isPatroling;
 void Start(){
     agent = GetComponent<NavMeshAgent>();
     player = GameObject.Find("Player");
+    pinto = GameObject.Find("Pinto");
     isPatroling = true;
 }
 
 void Update(){
-  Patrol();
-
+  Patrol();  
 }
 
 void Patrol(){
-    //run away from player
-    Vector3 runTo = transform.position + ((transform.position - Player.position) * multiplier);
+    //run towards pinto
+    Vector3 runTo = transform.position - ((transform.position - Pinto.position) * multiplier);
     float distance = Vector3.Distance(transform.position, Player.position);
-    if (distance < range) {
-     agent.SetDestination(runTo);
-     agent.speed = fleeingSpeedMultiplier * patrolingSpeed;
-    }
-    //else patrol randomly
-    else {
-        if (!hasDestination) GetDestinationPoint();
-        if (hasDestination) {
-            agent.SetDestination(destinationPoint);
-            agent.speed = patrolingSpeed;
-        }
-        if (Vector3.Distance(transform.position, destinationPoint) < 10) hasDestination = false;}
+    agent.SetDestination(runTo);
+    agent.speed = patrolingSpeed;
+    
+    
+       
 }
 
 void GetDestinationPoint(){
-
     float randomZ = Random.Range(-patrolingRadius, patrolingRadius);
-    float randomX = Random.Range(-patrolingRadius, patrolingRadius);
+    float randomX = Random.Range(-patrolingRadius, patrolingRadius);    
     destinationPoint = new Vector3(agent.transform.position.x + randomX, transform.position.y, agent.transform.position.z + randomZ);
     if (Physics.Raycast(destinationPoint, Vector3.down, whatIsGround)) hasDestination = true;
     }
-
-
 }
